@@ -37,6 +37,13 @@ dependencies {
     intTestImplementation 'org.glassfish:javax.json:1.1.4'
     // Support for JDK 9 and above
     intTestImplementation 'javax.xml.bind:jaxb-api:2.3.1'
+    cicsBundlePart files(war)
+}
+
+cicsBundle {
+    build {
+        defaultJVMServer = 'MYJVMS'
+    }
 }
 
 liberty {
