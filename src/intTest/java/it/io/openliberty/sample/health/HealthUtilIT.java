@@ -66,7 +66,7 @@ public class HealthUtilIT {
 
   public static void changeProperty(String oldValue, String newValue) {
     try {
-      String fileName = System.getProperty("user.dir").split("target")[0] + "/resources/CustomConfigSource.json";
+      String fileName = System.getProperty("user.dir").split("/build/")[0] + "/resources/CustomConfigSource.json";
       BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
       String line = "";
       String oldContent = "", newContent = "";

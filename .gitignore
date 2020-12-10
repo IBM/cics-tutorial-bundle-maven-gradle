@@ -1,5 +1,6 @@
-# Maven generated
-target/
+# Gradle generated
+build/
+.gradle/
 
 # Eclipse generated
 .apt_generated/
@@ -11,6 +12,9 @@ MANIFEST.MF
 
 # VS Code
 .vscode/
+
+# IntelliJ
+.idea/
 
 # MacOS system files
 .DS_Store

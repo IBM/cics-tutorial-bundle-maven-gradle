@@ -1,0 +1,66 @@
+plugins {
+    id 'war'
+    id 'io.openliberty.tools.gradle.Liberty' version '3.1'
+}
+
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+sourceSets {
+    intTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    intTestImplementation.extendsFrom implementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    // Dependencies
+    providedCompile 'org.eclipse.microprofile:microprofile:3.3'
+    // Dependencies for tests
+    intTestImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    intTestImplementation 'org.apache.cxf:cxf-rt-rs-client:3.3.4'
+    intTestImplementation 'org.apache.cxf:cxf-rt-rs-extension-providers:3.3.4'
+    intTestImplementation 'org.glassfish:javax.json:1.1.4'
+    // Support for JDK 9 and above
+    intTestImplementation 'javax.xml.bind:jaxb-api:2.3.1'
+}
+
+liberty {
+    server {
+        name = 'sampleAppServer'
+        var = [
+            "default.http.port": "9080",
+            "default.https.port": "9443",
+            "app.context.root": "/",
+        ]
+    }
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    useJUnitPlatform()
+    systemProperty("http.port", liberty.server.var."default.http.port")
+    systemProperty("https.port", liberty.server.var."default.https.port")
+    systemProperty("app.context.root", liberty.server.var."app.context.root")
+    testClassesDirs = sourceSets.intTest.output.classesDirs
+    classpath = sourceSets.intTest.runtimeClasspath
+    shouldRunAfter test
+    dependsOn libertyStart
+    finalizedBy libertyStop
+}
+
+check.dependsOn integrationTest
